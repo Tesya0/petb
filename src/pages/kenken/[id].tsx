@@ -257,7 +257,7 @@ export const getStaticProps: GetStaticProps = async ({
   params,
   locale = 'ja',
 }) => {
-  const req = await fetch(`http://localhost:3000/data/kenken.json`);
+  const req = await fetch('/data/kenken.json');
   const reqData = await req.json();
   const idData = String(params && params.id);
   return {
