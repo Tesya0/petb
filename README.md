@@ -11,6 +11,7 @@
 - GSAP3
 - next-i18next
 - Dog API
+- microCMS
 
 ## 課題点
 
