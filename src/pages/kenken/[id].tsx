@@ -257,12 +257,35 @@ export const getStaticProps: GetStaticProps = async ({
   params,
   locale = 'ja',
 }) => {
-  const req = await fetch('/data/kenken.json');
-  const reqData = await req.json();
-  const idData = String(params && params.id);
+  interface Kenken {
+    [key: string]: object;
+    elementary: object;
+    intermediate: object;
+    advanced: object;
+  }
+  const kenken: Kenken = {
+    elementary: {
+      name: '初級',
+      answers: 4,
+    },
+    intermediate: {
+      name: '中級',
+      answers: 6,
+    },
+    advanced: {
+      name: '上級',
+      answers: 6,
+    },
+  };
+
+  // const req = await fetch('http://localhost:3000/data/kenken.json');
+  // const reqData = await req.json();
+  const idData: string = String(params && params.id);
+  console.log(kenken[idData]);
+
   return {
     props: {
-      data: reqData[idData],
+      data: kenken[idData],
       ...(await serverSideTranslations(locale, ['common'])),
     },
   };

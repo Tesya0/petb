@@ -18,7 +18,6 @@ const Aside = ({ list, title, text }: Props) => {
     tmp.push(`${value}/`);
     return tmp.join('');
   });
-  console.log(newArray);
 
   return (
     <AsideWrapper>
