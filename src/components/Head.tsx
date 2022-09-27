@@ -1,15 +1,16 @@
-import Head from 'next/head';
+import HTMLHead from 'next/head';
 
 interface Props {
   title: string;
   description: string;
 }
 
-export default ({ title, description }: Props): JSX.Element => {
+const Head = ({ title, description }: Props): JSX.Element => {
   return (
-    <Head>
+    <HTMLHead>
       <title>{title} | Pet B</title>
       <meta name="description" content={description} />
-    </Head>
+    </HTMLHead>
   );
 };
+export default Head;

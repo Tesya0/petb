@@ -18,7 +18,7 @@ import Footer from 'components/Footer';
 import SectionTitle from 'components/SectionTitle';
 import { userAgent } from 'next/server';
 
-export default ({ news }: any) => {
+const SinglePost = ({ news }: any) => {
   const router = useRouter();
   return (
     <>
@@ -40,6 +40,7 @@ export default ({ news }: any) => {
     </>
   );
 };
+export default SinglePost;
 
 export const getStaticProps = async (context: any) => {
   const id = context.params.id;
