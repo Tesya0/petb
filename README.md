@@ -12,6 +12,7 @@
 - next-i18next
 - Dog API
 - microCMS
+- Vercel
 
 ## 課題点
 
