@@ -1,4 +1,4 @@
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import type {
   NextPage,
   GetStaticProps,
@@ -143,6 +143,18 @@ const Kenken: NextPage<Props> = ({ data }) => {
     }
   };
 
+  useEffect(() => {
+    const handleRouteChange = (url: string, { shallow }: any) => {
+      console.log(shallow);
+      setOpeningGame(true);
+      setNowGame(false);
+    };
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, []);
+
   return (
     <>
       <Head
@@ -278,8 +290,6 @@ export const getStaticProps: GetStaticProps = async ({
     },
   };
 
-  // const req = await fetch('http://localhost:3000/data/kenken.json');
-  // const reqData = await req.json();
   const idData: string = String(params && params.id);
   console.log(kenken[idData]);
 
