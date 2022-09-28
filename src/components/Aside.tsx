@@ -35,13 +35,11 @@ const Aside = ({ list, title, text }: Props) => {
         })}
       </ol>
       <h2>{title ? title : ''}</h2>
-      <p>{text}</p>
+      <Children>{text}</Children>
     </AsideWrapper>
   );
 };
 export default Aside;
-
-const BreadcrumbWrapper = styled.ol``;
 
 const AsideWrapper = styled.aside`
   display: flex;
@@ -52,6 +50,7 @@ const AsideWrapper = styled.aside`
   padding: 10px 20px;
   color: #fff;
   background: ${color.blueOxford};
+  font-size: 0.75em;
   ol {
     display: flex;
   }
@@ -62,4 +61,8 @@ const AsideWrapper = styled.aside`
       color: ${color.grayDim};
     }
   }
+`;
+const Children = styled.p`
+  font-weight: 500;
+  letter-spacing: 0.15em;
 `;
