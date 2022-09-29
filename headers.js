@@ -33,8 +33,8 @@ module.exports = [
     value: 'camera=*',
   },
   // todo: Content Security Policy を適用する
-  {
-    key: 'Content-Security-Policy',
-    value: "default-src 'self'",
-  },
+  // {
+  //   key: 'Content-Security-Policy',
+  //   value: `default-src \'self\'`,
+  // },
 ];
