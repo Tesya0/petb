@@ -1,10 +1,4 @@
 import { ReactNode } from 'react';
-import type {
-  NextPage,
-  GetStaticProps,
-  GetStaticPaths,
-  InferGetStaticPropsType,
-} from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -121,17 +115,6 @@ const Layout = ({ children }: Props) => {
   );
 };
 export default Layout;
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const req = await fetch(`http://localhost:3000/data/kenken.json`);
-  const reqData = await req.json();
-  const idData = String(params && params.id);
-  return {
-    props: {
-      data: reqData[idData],
-    },
-  };
-};
 
 const Header = styled.header`
   flex: 0 1 260px;
