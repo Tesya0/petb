@@ -34,9 +34,9 @@ export const Home: NextPage<Props> = ({ news }) => {
                     <Link href={`news/${post.id}`}>
                       <a>
                         <time>
-                          <Moment format="YYYY/MM/DD">
-                            {post.publishedAt}
-                          </Moment>
+                          {/* <Moment format="YYYY/MM/DD"> */}
+                          {post.publishedAt}
+                          {/* </Moment> */}
                         </time>
                         <h3>{post.title}</h3>
                       </a>

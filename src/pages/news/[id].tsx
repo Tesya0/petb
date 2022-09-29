@@ -27,7 +27,9 @@ const SinglePost = ({ news }: any) => {
       <Main>
         <div className="background"></div>
         <h2>{news.title}</h2>
-        <Moment format="YYYY/MM/DD">{news.publishedAt}</Moment>
+        {/* <Moment format="YYYY/MM/DD"> */}
+        {news.publishedAt}
+        {/* </Moment> */}
         <article
           className="container -text"
           dangerouslySetInnerHTML={{ __html: news.body }}

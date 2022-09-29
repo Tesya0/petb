@@ -145,7 +145,6 @@ const Kenken: NextPage<Props> = ({ data }) => {
 
   useEffect(() => {
     const handleRouteChange = (url: string, { shallow }: any) => {
-      console.log(shallow);
       setOpeningGame(true);
       setNowGame(false);
     };
@@ -291,8 +290,6 @@ export const getStaticProps: GetStaticProps = async ({
   };
 
   const idData: string = String(params && params.id);
-  console.log(kenken[idData]);
-
   return {
     props: {
       data: kenken[idData],
