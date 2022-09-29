@@ -13,7 +13,6 @@ import { client } from '../../../libs/client';
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const pageTitle = 'おしらせ';
-
 export const Home: NextPage<Props> = ({ news }) => {
   return (
     <>

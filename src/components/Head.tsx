@@ -8,7 +8,7 @@ interface Props {
 const Head = ({ title, description }: Props): JSX.Element => {
   return (
     <HTMLHead>
-      <title>{title && `${title} | `}Pet B</title>
+      <title>{title ? `${title} | Pet B` : 'Pet B'}</title>
       <meta name="description" content={description} />
     </HTMLHead>
   );
