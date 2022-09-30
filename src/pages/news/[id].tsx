@@ -7,6 +7,8 @@ import type {
 } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import { color } from 'styles/color';
 import { vwRange } from 'styles/vw';
 import { breakpoints, mqMin } from 'styles/mq';
@@ -27,7 +29,9 @@ const SinglePost = ({ news }: any) => {
       <Main>
         <div className="background"></div>
         <h2>{news.title}</h2>
-        {news.publishedAt}
+        <time>
+          {format(utcToZonedTime(news.publishedAt, 'Asia/Tokyo'), 'yyyy/M/d')}
+        </time>
         <article
           className="container -text"
           dangerouslySetInnerHTML={{ __html: news.body }}

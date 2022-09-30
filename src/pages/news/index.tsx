@@ -3,6 +3,8 @@ import Moment from 'react-moment';
 import Link from 'next/link';
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Image from 'next/image';
+import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import { color } from 'styles/color';
 import styled from 'styled-components';
 import Head from 'components/Head';
@@ -32,7 +34,12 @@ export const Home: NextPage<Props> = ({ news }) => {
                   <li key={post.id}>
                     <Link href={`news/${post.id}`}>
                       <a>
-                        <time>{post.publishedAt}</time>
+                        <time>
+                          {format(
+                            utcToZonedTime(post.publishedAt, 'Asia/Tokyo'),
+                            'yyyy/M/d'
+                          )}
+                        </time>
                         <h3>{post.title}</h3>
                       </a>
                     </Link>
