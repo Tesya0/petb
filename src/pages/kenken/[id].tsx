@@ -341,6 +341,16 @@ const TotalQuestionsSelect = styled.div`
     outline: none;
   }
 `;
+const ScoreResult = styled.p`
+  font-size: 1.5em;
+  font-weight: 700 !important;
+  text-align: center;
+  span {
+    padding-left: 0.2em;
+    font-size: 2em;
+    color: ${color.greenCelery};
+  }
+`;
 const StartButton = styled.button`
   display: block;
   padding: 1em 3em;
@@ -352,16 +362,6 @@ const StartButton = styled.button`
   transition: all 0.25s;
   &:hover {
     opacity: 0.8;
-  }
-`;
-const ScoreResult = styled.h3`
-  font-size: 1.5em;
-  font-weight: 700;
-  text-align: center;
-  span {
-    padding-left: 0.2em;
-    font-size: 2em;
-    color: ${color.greenCelery};
   }
 `;
 
