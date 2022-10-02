@@ -62,7 +62,6 @@ export const Home: NextPage<Props> = ({ news }) => {
                     <Link href={`news/${post.id}`}>
                       <a>
                         <time>
-                          {' '}
                           {format(
                             utcToZonedTime(post.publishedAt, 'Asia/Tokyo'),
                             'yyyy/M/d'
