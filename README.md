@@ -11,6 +11,7 @@
 - GSAP3
 - next-i18next
 - date-fns, date-fns-tz
+- SWR
 - Dog API
 - microCMS
 - Vercel
@@ -18,12 +19,13 @@
 ## 所感
 
 構想〜公開まで約2週間ほど。  
-犬種名検定というサイト内アプリを Dog API というAPIを使用して開発しました。  
+犬種名検定というサイト内アプリをDog APIというAPIを使用して開発しました。  
 クイズ形式自体は割とスムーズに実装できましたが、APIで受け取る情報は全て英語なので、英語→日本語に訳すための辞書作成に時間を浪費しました(next-i18next使用)。  
+なおSWRを使用してfetchしています。  
 お知らせもmicroCMSで管理しているので、JAMStackな構成になっております。  
 Vercelにデプロイするとタイムゾーンのずれが生じるので、date-fnsとdate-fns-tzでフォーマット。  
 下記URLを参考にセキュリティヘッダーも設定。  
-https://zenn.dev/heavenosk/scraps/1e0b5d88b7a135
+https://zenn.dev/heavenosk/scraps/1e0b5d88b7a135  
 
 ## 将来的な実装
 

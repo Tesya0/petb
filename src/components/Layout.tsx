@@ -21,10 +21,10 @@ const Layout = ({ children }: Props) => {
       id: 'intermediate',
       jp: '中級',
     },
-    // {
-    //   id: 'advanced',
-    //   jp: '上級',
-    // },
+    {
+      id: 'advanced',
+      jp: '上級',
+    },
   ];
   return (
     <>

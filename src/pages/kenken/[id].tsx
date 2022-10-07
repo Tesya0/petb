@@ -7,6 +7,7 @@ import type {
 } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { color } from 'styles/color';
@@ -14,17 +15,69 @@ import styled from 'styled-components';
 import gsap from 'gsap';
 import 'semantic-ui-css/semantic.min.css';
 import { Loader } from 'semantic-ui-react';
+import {
+  elementaryBreeds,
+  intermediateBreeds,
+  advancedBreeds,
+} from '../../../public/data/BreedList';
 import Head from 'components/Head';
 import Aside from 'components/Aside';
 import Footer from 'components/Footer';
 import AnswerList from 'components/AnswerList';
-import { getRandomNum } from 'function/getRandom';
+import { getRandomNum, shuffleArray } from 'function/getRandom';
 import SinglePage from 'components/SinglePage';
 import SingleContainer from 'components/SingleContainer';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
-const Kenken: NextPage<Props> = ({ data }) => {
+type QuestionImage = {
+  breed: string;
+};
+
+export const QuestionImage = ({ breed }: QuestionImage) => {
+  // SWR
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const { data, error } = useSWR(
+    `https://dog.ceo/api/breed/${breed}/images/random`,
+    fetcher,
+    {
+      onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+        // 再試行は10回までしかできません。
+        if (retryCount >= 5) return;
+        // 5秒後に再試行します。
+        setTimeout(() => revalidate({ retryCount: retryCount + 1 }), 2000);
+      },
+    }
+  );
+  return (
+    <QuestionImageWrapper>
+      {data ? (
+        <Image
+          className="img"
+          src={data.message}
+          alt="この画像の犬種名を選択肢から当ててみましょう"
+          layout="fill"
+          objectFit="contain"
+        />
+      ) : (
+        <Loader active size="huge" />
+      )}
+    </QuestionImageWrapper>
+  );
+};
+const QuestionImageWrapper = styled.div`
+  position: relative !important;
+  width: 100% !important;
+  padding-top: 28.125% !important;
+  margin-bottom: 40px;
+  .img {
+    position: absolute !important;
+    width: unset !important;
+    height: 100% !important;
+  }
+`;
+
+const Kenken: NextPage<Props> = ({ props }) => {
   // 全ての問題数
   const [totalQuestions, setTotalQuestions] = useState<number>(5);
   const totalQuestionsList: number[] = [5, 10, 20, 50];
@@ -35,7 +88,7 @@ const Kenken: NextPage<Props> = ({ data }) => {
   // 正解名
   const [correctName, setCorrectName] = useState('');
   // 選択肢
-  const [answerList, setAnswerList] = useState([]);
+  const [answerList, setAnswerList] = useState<string[]>([]);
   // ユーザーの選択肢
   const [userAnswer, setUserAnswer] = useState('');
   // 現在の問題の正誤
@@ -52,8 +105,6 @@ const Kenken: NextPage<Props> = ({ data }) => {
   const [waitingGame, setWaitingGame] = useState(false);
   // リザルト画面
   const [resultGame, setResultGame] = useState(false);
-  // 画像ローディング
-  const [isLoading, setIsLoading] = useState(true);
   // Ref
   const correctRef = useRef(null);
   const missRef = useRef(null);
@@ -62,40 +113,40 @@ const Kenken: NextPage<Props> = ({ data }) => {
   // i18n
   const { t } = useTranslation('common');
 
-  const fetchDogList = async () => {
-    const res = await fetch(
-      `https://dog.ceo/api/breeds/image/random/${data.answers}`
-    );
-    const result = await res.json();
-    return result.message;
+  const answersQty = props.answers;
+
+  const getRandomBreedsList = (array: string[], qty: number) => {
+    const randomAllBreedsList = shuffleArray(array);
+    return randomAllBreedsList.slice(0, qty);
   };
 
   const setQuestion = async () => {
-    setIsLoading(true);
-    const dogUrlList = await fetchDogList();
-    const dogAllList = dogUrlList.map((value: string) => {
-      return { url: value, name: value.split('/')[4] };
-    });
-    const correct = dogAllList[getRandomNum(3)];
+    const answerBreedsList: string[] = getRandomBreedsList(
+      props.breeds,
+      answersQty
+    );
+    setCorrectName(answerBreedsList[getRandomNum(answersQty - 1)]);
     if (correctRef.current || missRef.current) {
       gsap.set([correctRef.current, missRef.current], {
         clearProps: 'all',
       });
     }
-    setAnswerList(dogAllList);
-    setQuestionImage(correct.url);
-    setIsLoading(false);
-    setCorrectName(correct.name);
+    setAnswerList(answerBreedsList);
+  };
+
+  const lobbyQuestion = () => {
+    setOpeningGame(true);
+    setNowGame(false);
+    setNowQuestion(1);
+    setTotalScore(100);
+    setSingleScore(100 / totalQuestions);
+    setResultGame(false);
+    setQuestionImage('');
   };
 
   const startQuestion = () => {
     setNowGame(true);
-    setNowQuestion(1);
-    setTotalScore(100);
-    setSingleScore(100 / totalQuestions);
     setOpeningGame(false);
-    setResultGame(false);
-    setQuestionImage('');
     setQuestion();
   };
 
@@ -143,9 +194,9 @@ const Kenken: NextPage<Props> = ({ data }) => {
   };
 
   useEffect(() => {
+    lobbyQuestion();
     const handleRouteChange = (url: string, { shallow }: any) => {
-      setOpeningGame(true);
-      setNowGame(false);
+      lobbyQuestion();
     };
     router.events.on('routeChangeStart', handleRouteChange);
     return () => {
@@ -156,17 +207,17 @@ const Kenken: NextPage<Props> = ({ data }) => {
   return (
     <>
       <Head
-        title={`犬種名検定${data.name}`}
+        title={`犬種名検定${props.name}`}
         description="画像から犬種名を当てるクイズゲームです"
       />
       <Aside
-        list={['ホーム', `犬種名検定${data.name}`]}
+        list={['ホーム', `犬種名検定${props.name}`]}
         text={asideQuestions()}
       />
       <SinglePage
         title={
           !nowGame
-            ? `犬種名検定${data.name}`
+            ? `犬種名検定${props.name}`
             : !waitingGame
             ? '犬種名はなんでしょう？'
             : singleResult
@@ -174,21 +225,7 @@ const Kenken: NextPage<Props> = ({ data }) => {
             : 'はずれ'
         }
       >
-        {nowGame && (
-          <QuestionImage>
-            {isLoading ? (
-              <Loader active size="huge" />
-            ) : (
-              <Image
-                className="img"
-                src={questionImage}
-                alt="この画像の犬種名を選択肢から当ててみましょう"
-                layout="fill"
-                objectFit="contain"
-              />
-            )}
-          </QuestionImage>
-        )}
+        {nowGame && correctName && <QuestionImage breed={correctName} />}
         <SingleContainer post={!nowGame}>
           {openingGame && (
             <>
@@ -197,7 +234,7 @@ const Kenken: NextPage<Props> = ({ data }) => {
                 初めに出題数を選択し、「スタート」ボタンを押してください。
                 <br />
                 順番に表示される犬の画像から犬種名を推測し、下部の
-                {data.answers}択の選択肢の中からクリックしましょう。
+                {answersQty}択の選択肢の中からクリックしましょう。
               </p>
               <h3>注意</h3>
               <p>
@@ -228,16 +265,16 @@ const Kenken: NextPage<Props> = ({ data }) => {
           )}
           {nowGame && (
             <AnswerList>
-              {answerList.map((answer: any, key) => {
+              {answerList.map((answer: string) => {
                 return (
-                  <li key={key}>
+                  <li key={answer}>
                     <button
-                      ref={answer.name === correctName ? correctRef : null}
+                      ref={answer === correctName ? correctRef : null}
                       onClick={(e) => answerClick(e)}
-                      value={answer.name}
+                      value={answer}
                       disabled={waitingGame}
                     >
-                      {t(answer.name)}
+                      {t(answer)}
                     </button>
                   </li>
                 );
@@ -266,22 +303,25 @@ export const getStaticProps: GetStaticProps = async ({
   const kenken: Kenken = {
     elementary: {
       name: '初級',
-      answers: 4,
+      answers: 2,
+      breeds: elementaryBreeds,
     },
     intermediate: {
       name: '中級',
-      answers: 6,
+      answers: 4,
+      breeds: intermediateBreeds,
     },
     advanced: {
       name: '上級',
       answers: 6,
+      breeds: advancedBreeds,
     },
   };
 
   const idData: string = String(params && params.id);
   return {
     props: {
-      data: kenken[idData],
+      props: kenken[idData],
       ...(await serverSideTranslations(locale, ['common'])),
     },
   };
@@ -302,17 +342,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const QuestionImage = styled.div`
-  position: relative !important;
-  width: 100% !important;
-  padding-top: 28.125% !important;
-  margin-bottom: 40px;
-  .img {
-    position: absolute !important;
-    width: unset !important;
-    height: 100% !important;
-  }
-`;
 const TotalQuestionsSelect = styled.div`
   position: relative;
   width: 240px;
