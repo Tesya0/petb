@@ -46,6 +46,7 @@ const SingleContainerWrapper = styled.div<Props>`
     background: ${color.greenGossip};
   }
   p {
+    padding: 0 0.5em;
     margin-bottom: 2em;
     font-weight: 300;
   }

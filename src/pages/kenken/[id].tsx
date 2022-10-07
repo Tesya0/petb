@@ -229,12 +229,39 @@ const Kenken: NextPage<Props> = ({ props }) => {
         <SingleContainer post={!nowGame}>
           {openingGame && (
             <>
+              <h3>犬種名検定{props.name}とは？</h3>
+              {props.id === 'elementary' ? (
+                <p>
+                  日本でも飼われている方が多かったり、人気の高いメジャーな犬種に限定した画像を出題します。
+                  <br />
+                  選択肢は{answersQty}
+                  択なので、あまり犬種に詳しくない方でもなんとなくで分かるかもしれません。
+                </p>
+              ) : props.id === 'intermediate' ? (
+                <p>
+                  初級に出題される犬種に加え、マイナーな犬種も多数追加。
+                  <br />
+                  選択肢は{answersQty}
+                  択になり、難易度がかなり上がるので、初級で慣れてきた方にオススメ。
+                </p>
+              ) : props.id === 'advanced' ? (
+                <p>
+                  現在登録されている全140種以上がフル出場。
+                  <br />
+                  その中にはミックス犬や、そもそも犬ではなくてイヌ科の別動物すら入っております。
+                  <br />
+                  選択肢も{answersQty}
+                  択なので、相当コアな犬好きの方でも満点を出すのは難しいでしょう。
+                  <br />
+                  ぜひチャレンジしてみてください。
+                </p>
+              ) : null}
               <h3>遊び方</h3>
               <p>
                 初めに出題数を選択し、「スタート」ボタンを押してください。
                 <br />
-                順番に表示される犬の画像から犬種名を推測し、下部の
-                {answersQty}択の選択肢の中からクリックしましょう。
+                順番に表示される犬の画像から犬種名を推測し、下部の{answersQty}
+                択の選択肢の中からクリックしましょう。
               </p>
               <h3>注意</h3>
               <p>
@@ -302,16 +329,19 @@ export const getStaticProps: GetStaticProps = async ({
   }
   const kenken: Kenken = {
     elementary: {
+      id: 'elementary',
       name: '初級',
       answers: 2,
       breeds: elementaryBreeds,
     },
     intermediate: {
+      id: 'intermediate',
       name: '中級',
       answers: 4,
       breeds: intermediateBreeds,
     },
     advanced: {
+      id: 'advanced',
       name: '上級',
       answers: 6,
       breeds: advancedBreeds,
