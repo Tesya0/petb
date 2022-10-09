@@ -147,6 +147,7 @@ const Kenken: NextPage<Props> = ({ props }) => {
   const startQuestion = () => {
     setNowGame(true);
     setOpeningGame(false);
+    setResultGame(false);
     setQuestion();
   };
 
