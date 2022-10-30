@@ -5,6 +5,7 @@
 
 ## 技術選定
 
+- Docker
 - Next.js(React)
 - TypeScript
 - styled-components
