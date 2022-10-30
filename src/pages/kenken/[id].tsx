@@ -24,7 +24,7 @@ import Head from 'components/Head';
 import Aside from 'components/Aside';
 import Footer from 'components/Footer';
 import AnswerList from 'components/AnswerList';
-import { getRandomNum, shuffleArray } from 'function/getRandom';
+import { getRandomNum, shuffleArray } from 'hooks/getRandom';
 import SinglePage from 'components/SinglePage';
 import SingleContainer from 'components/SingleContainer';
 
@@ -65,17 +65,6 @@ export const QuestionImage = ({ breed }: QuestionImage) => {
     </QuestionImageWrapper>
   );
 };
-const QuestionImageWrapper = styled.div`
-  position: relative !important;
-  width: 100% !important;
-  padding-top: 28.125% !important;
-  margin-bottom: 40px;
-  .img {
-    position: absolute !important;
-    width: unset !important;
-    height: 100% !important;
-  }
-`;
 
 const Kenken: NextPage<Props> = ({ props }) => {
   // 全ての問題数
@@ -422,6 +411,17 @@ const StartButton = styled.button`
   transition: all 0.25s;
   &:hover {
     opacity: 0.8;
+  }
+`;
+const QuestionImageWrapper = styled.div`
+  position: relative !important;
+  width: 100% !important;
+  padding-top: 28.125% !important;
+  margin-bottom: 40px;
+  .img {
+    position: absolute !important;
+    width: unset !important;
+    height: 100% !important;
   }
 `;
 
